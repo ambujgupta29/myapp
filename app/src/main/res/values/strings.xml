@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">MyApp</string>
+    <string-array name="category">
+        <item>Electronics</item>
+        <item>Bicycles</item>
+        <item>Notes</item>
+        <item>Projects</item>
+        <item>Room Utilities</item>
+        <item>Others</item>
+
+    </string-array>
+
+    <string-array name="Hostel_Blocks">
+        <item>MH-A</item>
+        <item>MH-B</item>
+        <item>MH-B Annex</item>
+        <item>MH-C</item>
+        <item>MH-D</item>
+        <item>MH-D Annex</item>
+        <item>MH-E</item>
+        <item>MH-F</item>
+        <item>MH-G</item>
+        <item>MH-H</item>
+        <item>MH-J</item>
+        <item>MH-K</item>
+        <item>MH-L</item>
+        <item>MH-Q</item>
+        <item>LH-A</item>
+        <item>LH-B</item>
+        <item>LH-C</item>
+        <item>LH-D</item>
+        <item>LH-E</item>
+        <item>LH-E Annex</item>
+        <item>LH-F</item>
+    </string-array>
+</resources>
