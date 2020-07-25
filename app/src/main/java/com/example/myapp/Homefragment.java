@@ -47,7 +47,7 @@ public class Homefragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_home, container, false);
         myrecyclerview = v.findViewById(R.id.recycler_view);
         search_view = v.findViewById(R.id.search_view);
-        swipeRefreshLayout=v.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout = v.findViewById(R.id.swiperefresh);
         myrecylceviewadapter = new RecycleViewAdapter(getContext(), lst_thing);
         myrecyclerview.setLayoutManager(new GridLayoutManager(getContext(), 2));
         myrecyclerview.setAdapter(myrecylceviewadapter);
@@ -58,8 +58,8 @@ public class Homefragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-               myrecylceviewadapter.notifyDataSetChanged();
-               swipeRefreshLayout.setRefreshing(false);
+                myrecylceviewadapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
         return v;
@@ -82,8 +82,15 @@ public class Homefragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                myrecylceviewadapter.getFilter().filter(newText);
-                return false;
+                String userinput = newText.toLowerCase();
+                List<thing> newlist = new ArrayList<>();
+                for (thing item : lst_thing) {
+                    if (item.getThing_title().toLowerCase().contains(userinput)) {
+                        newlist.add(item);
+                    }
+                }
+                myrecylceviewadapter.updatelist(newlist);
+                return true;
             }
         });
 
@@ -101,14 +108,14 @@ public class Homefragment extends Fragment {
                                 thin.setPrice(jsonObject.getString("price"));
                                 thin.setItem_id(jsonObject.getString("item_id"));
                                 thin.setThing_title(jsonObject.getString("item_name"));
-                                thin.setImage_url1("http://10.0.2.2:3000/"+jsonObject.getString("photo_url1"));
-                                thin.setImage_url2("http://10.0.2.2:3000/"+jsonObject.getString("photo_url2"));
-                                thin.setImage_url3("http://10.0.2.2:3000/"+jsonObject.getString("photo_url3"));
+                                thin.setImage_url1("http://10.0.2.2:3000/" + jsonObject.getString("photo_url1"));
+                                thin.setImage_url2("http://10.0.2.2:3000/" + jsonObject.getString("photo_url2"));
+                                thin.setImage_url3("http://10.0.2.2:3000/" + jsonObject.getString("photo_url3"));
                                 thin.setHostel_block(jsonObject.getString("hostel_block"));
                                 thin.setCategory(jsonObject.getString("category"));
                                 thin.setDescription(jsonObject.getString("description"));
                                 lst_thing.add(thin);
-                                myrecylceviewadapter.notifyItemInserted(lst_thing.size()-1);
+                                myrecylceviewadapter.notifyItemInserted(lst_thing.size() - 1);
 
 
                             } catch (JSONException e) {

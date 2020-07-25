@@ -24,35 +24,31 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class RecycleViewAdapter  extends RecyclerView.Adapter <RecycleViewAdapter.MyViewHolder> implements Filterable {
-  private Context mcontext;
-  private List<thing>mdata;
-  RequestOptions option;
-    private List<thing>mdatafull;
-
-
+public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
+    private Context mcontext;
+    private List<thing> mdata;
+    RequestOptions option;
 
 
     public RecycleViewAdapter(Context mcontext, List<thing> mdata) {
         this.mcontext = mcontext;
         this.mdata = mdata;
-        option=new RequestOptions().centerCrop().placeholder(R.drawable.loading_image).error(R.drawable.loading_image);
-        mdatafull=new ArrayList<>(mdata);
+        option = new RequestOptions().centerCrop().placeholder(R.drawable.loading_image).error(R.drawable.loading_image);
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        LayoutInflater minflater =LayoutInflater.from(mcontext);
-        view=minflater.inflate(R.layout.cardview_item,parent,false);
+        LayoutInflater minflater = LayoutInflater.from(mcontext);
+        view = minflater.inflate(R.layout.cardview_item, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
 
-        holder.tv_thing_price.setText("₹"+mdata.get(position).getPrice());
+        holder.tv_thing_price.setText("₹" + mdata.get(position).getPrice());
         holder.tv_thing_title.setText(mdata.get(position).getThing_title());
 
 
@@ -61,15 +57,15 @@ public class RecycleViewAdapter  extends RecyclerView.Adapter <RecycleViewAdapte
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mcontext,moreinfo.class);
-                intent.putExtra("price",mdata.get(position).getPrice());
-                intent.putExtra("category",mdata.get(position).getCategory());
-                intent.putExtra("Description",mdata.get(position).getDescription());
-                intent.putExtra("image_url1",mdata.get(position).getImage_url1());
-                intent.putExtra("image_url2",mdata.get(position).getImage_url2());
-                intent.putExtra("image_url3",mdata.get(position).getImage_url3());
-                intent.putExtra("hostel_block",mdata.get(position).getHostel_block());
-                intent.putExtra("item_id",mdata.get(position).getItem_id());
+                Intent intent = new Intent(mcontext, moreinfo.class);
+                intent.putExtra("price", mdata.get(position).getPrice());
+                intent.putExtra("category", mdata.get(position).getCategory());
+                intent.putExtra("Description", mdata.get(position).getDescription());
+                intent.putExtra("image_url1", mdata.get(position).getImage_url1());
+                intent.putExtra("image_url2", mdata.get(position).getImage_url2());
+                intent.putExtra("image_url3", mdata.get(position).getImage_url3());
+                intent.putExtra("hostel_block", mdata.get(position).getHostel_block());
+                intent.putExtra("item_id", mdata.get(position).getItem_id());
                 mcontext.startActivity(intent);
 
             }
@@ -83,55 +79,27 @@ public class RecycleViewAdapter  extends RecyclerView.Adapter <RecycleViewAdapte
         return mdata.size();
     }
 
-    @Override
-    public Filter getFilter() {
-        return mdatafilter;
-    }
-    private Filter mdatafilter=new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<thing>filteredlist=new ArrayList<>();
 
-            if(constraint==null||constraint.length()==0){
-                filteredlist.addAll(mdatafull);
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-            }else{
-                String filterpattern=constraint.toString().toLowerCase().trim();
-
-                for(thing item : mdatafull){
-                    if(item.getThing_title().toLowerCase().contains(filterpattern)){
-                        filteredlist.add(item);
-                    }
-                }
-            }
-            FilterResults results=new FilterResults();
-            results.values=filteredlist;
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            mdata.clear();
-            mdata.addAll((Collection<? extends thing>) results.values);
-            notifyDataSetChanged();
-
-        }
-    };
-
-
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
-
-        TextView tv_thing_price,tv_thing_title;
+        TextView tv_thing_price, tv_thing_title;
         ImageView img_thing_thumbnail;
         CardView cardView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            tv_thing_price=itemView.findViewById(R.id.thing_price);
-            img_thing_thumbnail=itemView.findViewById(R.id.image_thing);
-            cardView=itemView.findViewById(R.id.cardview_id);
-            tv_thing_title=itemView.findViewById(R.id.thing_title);
+            tv_thing_price = itemView.findViewById(R.id.thing_price);
+            img_thing_thumbnail = itemView.findViewById(R.id.image_thing);
+            cardView = itemView.findViewById(R.id.cardview_id);
+            tv_thing_title = itemView.findViewById(R.id.thing_title);
         }
+    }
+
+    public void updatelist(List<thing> newlist) {
+        mdata = new ArrayList<>();
+        mdata.addAll(newlist);
+        notifyDataSetChanged();
+
     }
 
 }

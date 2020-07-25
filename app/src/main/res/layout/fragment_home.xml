@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:queryHint="Search Here"
         android:searchIcon="@drawable/ic_search_black_24dp"
-      android:iconifiedByDefault="false"
+      android:iconifiedByDefault="true"
         android:background="@color/colorBackground">
 
     </SearchView>

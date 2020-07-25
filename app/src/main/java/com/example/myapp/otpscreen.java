@@ -59,6 +59,7 @@ public class otpscreen extends AppCompatActivity {
         boolean status = sharedPreferences.getBoolean("Is_Signed_phone", false);
         if (status) {
             startActivity(intent);
+            finish();
         }
 
 

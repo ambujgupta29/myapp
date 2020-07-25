@@ -72,11 +72,13 @@ public class signup extends AppCompatActivity {
         boolean status1 = sp2.getBoolean("Is_Signed", false);
         if (status1) {
             startActivity(intent1);
+            finish();
         }
 
         boolean status = sp.getBoolean("Is_Signed", false);
         if (status) {
             startActivity(intent);
+            finish();
         }
         bunext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +90,7 @@ public class signup extends AppCompatActivity {
                     edit.putString("name_profile", nameinput.getText().toString());
                     edit.apply();
                     startActivity(intent);
+                    finish();
 
                 }
             }
@@ -101,6 +104,7 @@ public class signup extends AppCompatActivity {
                 Intent intent1 = new Intent(signup.this, Login.class);
                 intent1.putExtra("email_pass_value", emailvalue);
                 startActivity(intent1);
+                finish();
             }
         });
     }
