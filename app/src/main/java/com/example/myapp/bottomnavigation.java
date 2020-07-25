@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,8 +16,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.List;
 
 public class bottomnavigation extends AppCompatActivity {
-    String  emailget,email_get_login;
-    String emailorig;
+    String emailget, email_get_login;
+    private SharedPreferences sp, sp2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +48,17 @@ public class bottomnavigation extends AppCompatActivity {
                     return true;
                 }
             };
-    public String getmydata(){
-         emailget=getIntent().getStringExtra("email_pass1");
-         email_get_login=getIntent().getStringExtra("email_pass2");
-         if(emailget==null) {
-             return email_get_login;
 
-         }
-         else{
-             return emailget;
-         }
+    public String getmydata() {
+        sp = getSharedPreferences("mypref1", 0);
+        emailget = sp.getString("email_profile", "");
+        sp2 = getSharedPreferences("mypref3", 0);
+        email_get_login = sp2.getString("email_pass2", "");
+        if (emailget == "") {
+            return email_get_login;
+
+        } else {
+            return emailget;
+        }
     }
 }

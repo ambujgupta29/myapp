@@ -35,7 +35,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 public class signup extends AppCompatActivity {
-    TextView  textview2;
+    TextView textview2;
     TextInputLayout name, email;
     TextInputEditText emailinput, nameinput;
     Button bunext, bulogin;
@@ -43,16 +43,17 @@ public class signup extends AppCompatActivity {
     ProgressDialog progressDialog;
     ImageView img_icon;
     AlertDialog.Builder builder;
-    String url="http://10.0.2.2:3000/api/signup";
-    private SharedPreferences sp;
-    private SharedPreferences.Editor edit;
+    String url = "http://10.0.2.2:3000/api/signup";
+    private SharedPreferences sp, sp2;
+    private SharedPreferences.Editor edit, editor;
+    Intent intent, intent1;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup);
-        img_icon=findViewById(R.id.img_icon);
+        img_icon = findViewById(R.id.img_icon);
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
         bunext = findViewById(R.id.bunext);
@@ -60,18 +61,32 @@ public class signup extends AppCompatActivity {
         textview2 = findViewById(R.id.textview2);
         emailinput = findViewById(R.id.emailinput);
         nameinput = findViewById(R.id.nameinput);
+        intent = new Intent(signup.this, otpscreen.class);
         sp = getSharedPreferences("mypref1", 0);
         edit = sp.edit();
-        progressDialog=new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
+
+        sp2 = getSharedPreferences("mypref3", 0);
+        editor = sp2.edit();
+        intent1 = new Intent(signup.this, bottomnavigation.class);
+        boolean status1 = sp2.getBoolean("Is_Signed", false);
+        if (status1) {
+            startActivity(intent1);
+        }
+
+        boolean status = sp.getBoolean("Is_Signed", false);
+        if (status) {
+            startActivity(intent);
+        }
         bunext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(edittextempty()==false) {
+                if (edittextempty() == false) {
                     serverinput();
-                    edit.putString("email_profile",emailinput.getText().toString());
+                    edit.putBoolean("Is_Signed", true);
+                    edit.putString("email_profile", emailinput.getText().toString());
+                    edit.putString("name_profile", nameinput.getText().toString());
                     edit.apply();
-                    Intent intent = new Intent(signup.this, otpscreen.class);
-                    intent.putExtra("email_pass",emailinput.getText().toString());
                     startActivity(intent);
 
                 }
@@ -81,31 +96,30 @@ public class signup extends AppCompatActivity {
         bulogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String emailvalue=emailinput.getText().toString();
-                emailvalue="";
+                String emailvalue = emailinput.getText().toString();
+                emailvalue = "";
                 Intent intent1 = new Intent(signup.this, Login.class);
-                intent1.putExtra("email_pass_value",emailvalue);
+                intent1.putExtra("email_pass_value", emailvalue);
                 startActivity(intent1);
             }
         });
     }
-    public boolean edittextempty(){
-        if(nameinput.getText().toString().length()==0||emailinput.getText().toString().length()==0)
-        {
-            builder=new AlertDialog.Builder(this);
+
+    public boolean edittextempty() {
+        if (nameinput.getText().toString().length() == 0 || emailinput.getText().toString().length() == 0) {
+            builder = new AlertDialog.Builder(this);
             builder.setMessage("Please Fill The Details")
-            .setPositiveButton("Ok",null);
-            AlertDialog alert=builder.create();
+                    .setPositiveButton("Ok", null);
+            AlertDialog alert = builder.create();
             alert.show();
-                ab=true;
+            ab = true;
+        } else if (nameinput.getText().toString().length() != 0 && emailinput.getText().toString().length() != 0) {
+            ab = false;
         }
-        else if(nameinput.getText().toString().length()!=0&&emailinput.getText().toString().length()!=0)
-        {
-            ab=false;
-        }
-       return ab;
+        return ab;
     }
-    public void serverinput(){
+
+    public void serverinput() {
         try {
             progressDialog.setMessage("please wait...");
             progressDialog.show();
@@ -126,7 +140,7 @@ public class signup extends AppCompatActivity {
                 public void onErrorResponse(VolleyError error) {
                     Log.e("LOG_RESPONSE", error.toString());
                     progressDialog.dismiss();
-                    Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }) {
                 @Override

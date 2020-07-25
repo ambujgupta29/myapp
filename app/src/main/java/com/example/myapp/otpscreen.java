@@ -31,54 +31,67 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
-public class otpscreen extends AppCompatActivity
-{
+public class otpscreen extends AppCompatActivity {
     TextInputLayout phonenumbertext;
     TextInputEditText phonenumberinput;
     String email_pass;
     Button buverify;
     AlertDialog.Builder builder;
     Boolean abc;
+    private SharedPreferences sharedPreferences, sp;
+    private SharedPreferences.Editor editor;
+    Intent intent;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.otpscreen);
-        phonenumbertext=findViewById(R.id.phonenumbertext);
-        phonenumberinput=findViewById(R.id.phonenumberinput);
-        email_pass=getIntent().getStringExtra("email_pass");
-        buverify=findViewById(R.id.buverify);
+        phonenumbertext = findViewById(R.id.phonenumbertext);
+        phonenumberinput = findViewById(R.id.phonenumberinput);
+        //email_pass=getIntent().getStringExtra("email_pass");
+        sp = getSharedPreferences("mypref1", 0);
+        email_pass = sp.getString("email_profile", "");
+        buverify = findViewById(R.id.buverify);
+        intent = new Intent(otpscreen.this, bottomnavigation.class);
+        sharedPreferences = getSharedPreferences("mypref2", 0);
+        editor = sharedPreferences.edit();
+
+        boolean status = sharedPreferences.getBoolean("Is_Signed_phone", false);
+        if (status) {
+            startActivity(intent);
+        }
+
+
         buverify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(edittextempty()==false) {
+                if (edittextempty() == false) {
                     imagepost(email_pass);
                     serverinput(email_pass);
-                    Intent intent = new Intent(otpscreen.this, bottomnavigation.class);
-                    intent.putExtra("email_pass1", email_pass);
+                    editor.putBoolean("Is_Signed_phone", true);
+                    editor.apply();
                     startActivity(intent);
                     finish();
                 }
             }
         });
     }
-    public boolean edittextempty(){
-        if(phonenumberinput.getText().toString().length()==0)
-        {
-            builder=new AlertDialog.Builder(this);
+
+    public boolean edittextempty() {
+        if (phonenumberinput.getText().toString().length() == 0) {
+            builder = new AlertDialog.Builder(this);
             builder.setMessage("Please Enter Phone Number")
-                    .setPositiveButton("Ok",null);
-            AlertDialog alert=builder.create();
+                    .setPositiveButton("Ok", null);
+            AlertDialog alert = builder.create();
             alert.show();
-            abc=true;
-        }
-        else if(phonenumberinput.getText().toString().length()!=0)
-        {
-            abc=false;
+            abc = true;
+        } else if (phonenumberinput.getText().toString().length() != 0) {
+            abc = false;
         }
         return abc;
     }
-    public void imagepost(String abf)
-    {
+
+    public void imagepost(String abf) {
         JSONObject jsonBody = new JSONObject();
         final String mRequestBody = jsonBody.toString();
 
@@ -86,7 +99,7 @@ public class otpscreen extends AppCompatActivity
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://10.0.2.2:3000/api/signup/name/userprofile/" + abf, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(getApplicationContext(),"uploaded", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "uploaded", Toast.LENGTH_LONG).show();
                 Log.i("LOG_RESPONSE", response);
 
             }
@@ -124,6 +137,7 @@ public class otpscreen extends AppCompatActivity
 
         mysingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
+
     public void serverinput(String abf) {
         try {
             JSONObject jsonBody = new JSONObject();
